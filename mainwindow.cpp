@@ -2,8 +2,11 @@
 #include <QImage>
 #include <QToolBar>
 #include <QFile>
+#include <QDebug>
 #include <QFileDialog>
 #include <QTextStream>
+#include <QColorDialog>
+#include <QFontDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -20,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     pMenu->addAction("&Close program",this,SLOT(closeProg()));
     pMenuBar->addMenu(pMenu);
     addToolBar(Qt::TopToolBarArea,createToolBar());
+    initVar();
+    nColor = Qt::black;
 
 }
 
@@ -69,25 +74,82 @@ void MainWindow::closeProg()
     this->close();
 }
 
+
+
+
 QToolBar *MainWindow::createToolBar()
 {
-    QImage img("pic.jpg");
+    QImage clear("clear.png");
     QImage coursive("coursive.png");
+    QImage strikeOut("strikeOut.png");
     QImage bold("fat.png");
     QImage sizeText("size.png");
-    QImage typeFont("typeFont.png");
+    QImage colorFont("typeFont.png");
+    QImage normal("normal.png");
     QToolBar *pTool = new QToolBar("Menu",this);
     pTool->setAllowedAreas( Qt::LeftToolBarArea|Qt::TopToolBarArea);
     pTool->setIconSize(QSize(40,40));
-    pTool->addAction(QPixmap::fromImage(coursive), "Free draw",this, SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(bold),"Free draw",this,SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(sizeText),"Free draw",this, SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(typeFont),"Free draw",this, SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));\
-    pTool->addAction(QPixmap::fromImage(img), "Clear",this,SLOT(closeProg()));
+    pTool->addAction(QPixmap::fromImage(normal),"Normal text",this, SLOT(setNormal()));
+    pTool->addAction(QPixmap::fromImage(coursive), "Italic",this, SLOT(setCoursive()));
+    pTool->addAction(QPixmap::fromImage(bold),"Bolt",this,SLOT(setBold()));
+    pTool->addAction(QPixmap::fromImage(strikeOut),"Strike Out",this,SLOT(setStrikeOut()));
+    pTool->addAction(QPixmap::fromImage(sizeText),"Set Font",this, SLOT(setStyleFont()));
+    pTool->addAction(QPixmap::fromImage(colorFont),"Set Color",this, SLOT(setColorFont()));
+    pTool->addAction(QPixmap::fromImage(clear), "Clear",this,SLOT(clear()));
 
     return pTool;
+}
+
+void MainWindow::initVar()
+{
+     flag = true;
+
+}
+
+
+void MainWindow::setNormal()
+{
+
+    font.setStyle(QFont::StyleNormal);
+    pTxt->setCurrentFont(font);
+}
+
+void MainWindow::setBold()
+{
+
+    flag =!flag;
+    (flag)?pTxt->setFontWeight(QFont::Bold):pTxt->setFontWeight(QFont::Normal);
+
+}
+
+void MainWindow::setCoursive()
+{
+    flag =!flag;
+    (flag)?font.setStyle(QFont::StyleItalic):font.setStyle(QFont::StyleNormal);
+    pTxt->setCurrentFont(font);
+}
+
+void MainWindow::setStrikeOut()
+{
+    flag =!flag;
+    (flag)?font.setStrikeOut(true):font.setStrikeOut(false);
+    pTxt->setCurrentFont(font);
+}
+
+void MainWindow::setColorFont()
+{
+    nColor = QColorDialog::getColor();
+    pTxt->setTextColor(nColor);
+}
+
+void MainWindow::setStyleFont()
+{
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok,this);
+    pTxt->setFont(font);
+}
+
+void MainWindow::clear()
+{
+    pTxt->clear();
 }
