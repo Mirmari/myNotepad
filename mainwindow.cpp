@@ -33,13 +33,12 @@ void MainWindow::openFile()
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",tr("Text Files (*.txt)"));
 
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly))
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
        QMessageBox mes;
        mes.setText("Incorrect open!");
        mes.exec();
     }
-    file.open(QIODevice::ReadWrite | QIODevice::Text);
     QTextStream in(&file);
     pTxt->setText(in.readAll());
     file.close();
@@ -51,13 +50,12 @@ void MainWindow::saveFile()
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Text Files (*.txt)"));
 
     QFile file(fileName);
-    if(!file.open(QIODevice::WriteOnly))
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
        QMessageBox mes;
        mes.setText("Incorrect save!");
        mes.exec();
     }
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
         QTextStream stream(&file);
         stream << pTxt->toPlainText();
         file.close();
@@ -74,12 +72,17 @@ void MainWindow::closeProg()
 QToolBar *MainWindow::createToolBar()
 {
     QImage img("pic.jpg");
+    QImage coursive("coursive.png");
+    QImage bold("fat.png");
+    QImage sizeText("size.png");
+    QImage typeFont("typeFont.png");
     QToolBar *pTool = new QToolBar("Menu",this);
     pTool->setAllowedAreas( Qt::LeftToolBarArea|Qt::TopToolBarArea);
-    pTool->addAction(QPixmap::fromImage(img), "Free draw",this, SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(img),"Free draw",this, SLOT(closeProg()));
-    pTool->addAction(QPixmap::fromImage(img),"Free draw",this, SLOT(closeProg()));
+    pTool->setIconSize(QSize(40,40));
+    pTool->addAction(QPixmap::fromImage(coursive), "Free draw",this, SLOT(closeProg()));
+    pTool->addAction(QPixmap::fromImage(bold),"Free draw",this,SLOT(closeProg()));
+    pTool->addAction(QPixmap::fromImage(sizeText),"Free draw",this, SLOT(closeProg()));
+    pTool->addAction(QPixmap::fromImage(typeFont),"Free draw",this, SLOT(closeProg()));
     pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));
     pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));
     pTool->addAction(QPixmap::fromImage(img),"Free draw",this,SLOT(closeProg()));
